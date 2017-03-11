@@ -34,6 +34,7 @@ public class ServerCoreImpl implements ServerCore {
         this.applicationContext = applicationContext;
         this.serverSocket = serverSocket;
         this.executor = executor;
+        this.executor.setCorePoolSize(100);
         this.shutdown = false;
         this.clientList = new ArrayList<>();
         log.info("Server created with port " + serverSocket.getLocalPort());

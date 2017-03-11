@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <property file="C:/Users/Sergey/Desktop/Java/test-task-file-server/server/target/classes/app.properties"/>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>C:\\Users\\Sergey\\Desktop\\Java\\test-task-file-server\\server\\target</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>
-                C:\\Users\\Sergey\\Desktop\\Java\\test-task-file-server\\server\\target\\logfile.%d{yyyy-MM-dd}.log
-            </fileNamePattern>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${file.logs}/logfile.log</file>
         <encoder>
             <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n%n</pattern>
         </encoder>
@@ -24,13 +17,16 @@
 
     <logger name="org.springframework" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </logger>
 
     <logger name="com.kefirkb" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </logger>
 
     <root level="error">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>

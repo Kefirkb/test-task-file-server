@@ -1,6 +1,7 @@
 package com.kefirkb.core;
 
 
+import com.kefirkb.core.utils.ServerRequests;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,12 +13,14 @@ import java.util.regex.Pattern;
 import static com.kefirkb.core.utils.ServerRequests.*;
 import static com.kefirkb.core.utils.ServerResponseMessages.FILE_NAME_ERROR;
 import static com.kefirkb.core.utils.ServerResponseMessages.UNKNOWN_REQUEST;
+import static java.util.Arrays.stream;
 import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 public class ReceiverSenderServiceImpl implements ReceiverSenderService {
 
-    private static final String GET_FILE_COMMAND = "^(" + GET_FILE_REQUEST.getRequest() + ")[a-zA-Z1-9а-яА-Я+=,-_ " + Pattern.quote(File.separator) + "]+(.)[a-zA-Z0-9]+";
+    private static final String GET_FILE_COMMAND = "^(" + GET_FILE_REQUEST.getRequest() + ") " + Pattern.quote("\"") + "[a-zA-Z1-9а-яА-Я+=,-_)( " + Pattern.quote(File.separator) + "]+(.)[a-zA-Z0-9]+" + Pattern.quote("\"");
     private static final int BYTE_FRAME_SIZE = 1024;
 
     private Socket clientSocket;
@@ -43,11 +46,24 @@ public class ReceiverSenderServiceImpl implements ReceiverSenderService {
     @Override
     public void start() throws IOException, ClassNotFoundException {
         log.info("Start ReceiverSender...");
-
+        this.sendStartInfo();
         while (!isClosed()) {
             Object obj = objectReader.readObject();
             this.processData(obj);
         }
+    }
+
+    private void sendStartInfo() throws IOException {
+        log.info("Send start info.");
+        this.sendResponse(BYTE_FRAME_SIZE);
+        this.sendListOfCommands();
+    }
+
+    private void sendListOfCommands() throws IOException {
+        this.sendResponse(
+                stream(ServerRequests.values())
+                        .map(ServerRequests::getRequest)
+                        .collect(toList()));
     }
 
     @Override
@@ -114,7 +130,7 @@ public class ReceiverSenderServiceImpl implements ReceiverSenderService {
     }
 
     private void processGetFileRequest(String commandLine) throws IOException {
-        String[] parsedStrings = commandLine.split(" ");
+        String[] parsedStrings = commandLine.split("\"");
         String parsedFileName = parsedStrings[parsedStrings.length - 1];
         File f = fileWorkerService.containsFile(parsedFileName);
 

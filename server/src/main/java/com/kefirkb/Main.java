@@ -13,9 +13,6 @@ public class Main {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-context.xml");
         ServerCore core = ctx.getBean(ServerCore.class);
         core.start();
-        Thread.sleep(2000);
-        core.shutDown();
-        int a = 5;
     }
 
 }

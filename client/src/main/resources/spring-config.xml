@@ -5,22 +5,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
     <context:component-scan base-package="com.kefirkb.core"/>
     <context:property-placeholder location="classpath*:app.properties"/>
-
-    <bean id="serverSocket" class="java.net.ServerSocket">
-        <constructor-arg name="port" value="${server.port}"/>
-    </bean>
-    <bean id="threadPoolTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-    </bean>
-
     <bean id="workFolder" class="java.lang.String">
         <constructor-arg value="${file.workFolder}"/>
     </bean>
 
-    <bean id="fileStatistics" class="java.lang.String">
-        <constructor-arg value="${file.statistics}"/>
-    </bean>
-
-    <bean id="receiverSenderServiceImpl" class="com.kefirkb.core.ReceiverSenderServiceImpl" scope="prototype">
-        <constructor-arg type="com.kefirkb.core.FileWorkerService" ref="fileWorkerServiceImpl"/>
+    <bean id="inetSocketAddress" class="java.net.InetSocketAddress">
+        <constructor-arg index="0" type="java.lang.String" value="${server.address}"/>
+        <constructor-arg index="1" type="int" value="${server.port}"/>
     </bean>
 </beans>
