@@ -4,13 +4,22 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
     <context:component-scan base-package="com.kefirkb.core"/>
+    <context:property-placeholder location="classpath*:app.properties"/>
+
+    <bean id="serverSocket" class="java.net.ServerSocket">
+        <constructor-arg name="port" value="${server.port}"/>
+    </bean>
+    <bean id="threadPoolTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor"/>
 
     <bean id="workFolder" class="java.lang.String">
-        <constructor-arg value="D:\\books"/>
+        <constructor-arg value="D:\\Sounds"/>
     </bean>
 
     <bean id="fileStatistics" class="java.lang.String">
-        <constructor-arg value="D:\\books\\statistics.txt"/>
+        <constructor-arg value="D:\\Sounds\\statistics.txt"/>
     </bean>
 
+    <bean id="receiverSenderServiceImpl" class="com.kefirkb.core.ReceiverSenderServiceImpl" scope="prototype">
+        <constructor-arg type="com.kefirkb.core.FileWorkerService" ref="fileWorkerServiceImpl"/>
+    </bean>
 </beans>

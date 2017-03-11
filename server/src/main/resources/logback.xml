@@ -7,9 +7,11 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>D:\\books</file>
+        <file>C:\\Users\\Sergey\\Desktop\\Java\\test-task-file-server\\server\\target</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/var/log/century/sup_calc/logfile.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>
+                C:\\Users\\Sergey\\Desktop\\Java\\test-task-file-server\\server\\target\\logfile.%d{yyyy-MM-dd}.log
+            </fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
