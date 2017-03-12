@@ -5,9 +5,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
     <context:component-scan base-package="com.kefirkb.core"/>
     <context:property-placeholder location="classpath*:app.properties"/>
-    <bean id="workFolder" class="java.lang.String">
-        <constructor-arg value="${file.workFolder}"/>
-    </bean>
 
     <bean id="inetSocketAddress" class="java.net.InetSocketAddress">
         <constructor-arg index="0" type="java.lang.String" value="${server.address}"/>

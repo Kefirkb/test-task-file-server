@@ -73,7 +73,7 @@ public class ServerCoreImpl implements ServerCore {
             try {
                 clientReceiver.start();
             } catch (IOException | ClassNotFoundException e) {
-                log.error(e.getMessage());
+                log.info(e.getMessage());
             }
         });
     }

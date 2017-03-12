@@ -4,7 +4,7 @@ package com.kefirkb.core;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -32,8 +32,8 @@ public class FileWorkerServiceImpl implements FileWorkerService {
     private File fileStatistics;
 
     @Autowired
-    public FileWorkerServiceImpl(@Qualifier(value = "workFolder") String workFolder,
-                                 @Qualifier(value = "fileStatistics") String statisticsFilePath) throws IOException {
+    public FileWorkerServiceImpl(@Value("${file.workFolder}") String workFolder,
+                                 @Value("${file.statistics}") String statisticsFilePath) throws IOException {
         this.workFolder = workFolder;
         this.statisticsFilePath = statisticsFilePath;
     }
@@ -44,6 +44,8 @@ public class FileWorkerServiceImpl implements FileWorkerService {
         this.fullListOfFiles = getFullListOfFiles();
         this.createStatistics();
         this.saveStatistics();
+        log.info("Work folder is " + this.workFolder);
+        log.info("File with statistics " + this.statisticsFilePath);
     }
 
     private void validateWorkFolder(String str) throws FileNotFoundException {

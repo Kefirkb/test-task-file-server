@@ -2,7 +2,7 @@ package com.kefirkb.core;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -15,7 +15,7 @@ public class FileHelperServiceImpl implements FileHelperService {
     private BufferedOutputStream fileWriter;
 
     @Autowired
-    public FileHelperServiceImpl(@Qualifier(value = "workFolder") String workFolderName) {
+    public FileHelperServiceImpl(@Value("${file.workFolder}") String workFolderName) {
         this.validateWorkFolderName(workFolderName);
         this.workFolderName = workFolderName;
     }

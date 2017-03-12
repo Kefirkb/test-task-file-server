@@ -47,6 +47,7 @@ public class ClientImpl implements Client {
     }
 
     private void processResponse(Object response) throws IOException {
+
         if (response instanceof String) {
             log.info("Received string: " + response);
             return;

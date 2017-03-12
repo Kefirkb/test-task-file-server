@@ -9,15 +9,8 @@
     <bean id="serverSocket" class="java.net.ServerSocket">
         <constructor-arg name="port" value="${server.port}"/>
     </bean>
+
     <bean id="threadPoolTaskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-    </bean>
-
-    <bean id="workFolder" class="java.lang.String">
-        <constructor-arg value="${file.workFolder}"/>
-    </bean>
-
-    <bean id="fileStatistics" class="java.lang.String">
-        <constructor-arg value="${file.statistics}"/>
     </bean>
 
     <bean id="receiverSenderServiceImpl" class="com.kefirkb.core.ReceiverSenderServiceImpl" scope="prototype">
