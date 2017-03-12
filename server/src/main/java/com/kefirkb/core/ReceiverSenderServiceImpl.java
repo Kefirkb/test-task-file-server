@@ -4,6 +4,7 @@ package com.kefirkb.core;
 import com.kefirkb.core.utils.ServerRequests;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.*;
 import java.net.Socket;
@@ -21,7 +22,6 @@ import static java.util.stream.Collectors.toList;
 public class ReceiverSenderServiceImpl implements ReceiverSenderService {
 
     private static final String GET_FILE_COMMAND = "^(" + GET_FILE_REQUEST.getRequest() + ") " + Pattern.quote("\"") + "[a-zA-Z1-9а-яА-Я+=,-_)( " + Pattern.quote(File.separator) + "]+(.)[a-zA-Z0-9]+" + Pattern.quote("\"");
-    private static final int BYTE_FRAME_SIZE = 1024;
 
     private Socket clientSocket;
     private ObjectInputStream objectReader;
@@ -29,9 +29,12 @@ public class ReceiverSenderServiceImpl implements ReceiverSenderService {
     private volatile boolean shutdown;
 
     private FileWorkerService fileWorkerService;
+    private int byteFrameSize = 1024;
 
-    public ReceiverSenderServiceImpl(@Autowired FileWorkerService fileWorkerService) throws IOException {
+    public ReceiverSenderServiceImpl(@Autowired FileWorkerService fileWorkerService,
+                                     @Value("${frame.size}") int frameSize) throws IOException {
         this.shutdown = false;
+        this.byteFrameSize = frameSize;
         this.fileWorkerService = fileWorkerService;
     }
 
@@ -55,7 +58,7 @@ public class ReceiverSenderServiceImpl implements ReceiverSenderService {
 
     private void sendStartInfo() throws IOException {
         log.info("Send start info.");
-        this.sendResponse(BYTE_FRAME_SIZE);
+        this.sendResponse(byteFrameSize);
         this.sendListOfCommands();
     }
 
@@ -122,11 +125,11 @@ public class ReceiverSenderServiceImpl implements ReceiverSenderService {
     }
 
     private boolean isGetFileListRequest(Object receivedObject) {
-        return receivedObject.equals(GET_FILE_LIST_REQUEST.getRequest());
+        return GET_FILE_LIST_REQUEST.getRequest().equals(receivedObject);
     }
 
     private boolean isDisconnectRequest(Object receivedObject) {
-        return receivedObject.equals(DISCONNECT_REQUEST.getRequest());
+        return DISCONNECT_REQUEST.getRequest().equals(receivedObject);
     }
 
     private void processGetFileRequest(String commandLine) throws IOException {
@@ -137,7 +140,7 @@ public class ReceiverSenderServiceImpl implements ReceiverSenderService {
         if (nonNull(f)) {
             this.sendResponse(f);
 
-            byte[] buffer = new byte[BYTE_FRAME_SIZE];
+            byte[] buffer = new byte[byteFrameSize];
             BufferedInputStream bufferedDataStream = new BufferedInputStream(new FileInputStream(f));
 
             while (bufferedDataStream.available() > 0) {

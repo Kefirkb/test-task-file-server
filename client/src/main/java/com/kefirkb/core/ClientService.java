@@ -2,9 +2,6 @@ package com.kefirkb.core;
 
 import java.io.IOException;
 
-/**
- * Created by Sergey on 11.03.2017.
- */
 public interface ClientService {
     void connect() throws IOException;
 
