@@ -86,10 +86,13 @@
                         </goals>
                         <configuration>
                             <overwrite>true</overwrite>
-                            <outputDirectory>${basedir}/target/resources</outputDirectory>
+                            <outputDirectory>${basedir}/target</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.basedir}/src/main/resources</directory>
+                                    <includes>
+                                        <include>app.properties</include>
+                                    </includes>
                                 </resource>
                             </resources>
                         </configuration>
