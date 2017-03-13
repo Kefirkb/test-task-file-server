@@ -41,6 +41,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void sendObject(Object obj) throws IOException {
         log.info("Sending object...");
+        writer.reset();
         writer.writeObject(obj);
         writer.flush();
         log.info("Sending object Successfull!");
@@ -54,8 +55,20 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public byte[] receiveBytes() throws IOException {
         byte[] receivedBytes = new byte[bytesFrameSize];
-        this.clientSocket.getInputStream().read(receivedBytes);
+        int countReadBytes = this.clientSocket.getInputStream().read(receivedBytes);
+
+        if (isEOFByteFound(countReadBytes)) {
+            this.clientSocket.getInputStream().skip(bytesFrameSize - countReadBytes);
+        }
         return receivedBytes;
+    }
+
+    /*
+        when this.clientSocket.getInputStream().read(receivedBytes) read some byte = -1
+        then reading stops. I need read tale because my ObjectInputStream fail with some error
+     */
+    private boolean isEOFByteFound(int countOfReadBytes) {
+        return countOfReadBytes < bytesFrameSize;
     }
 
     @Override

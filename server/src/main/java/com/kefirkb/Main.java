@@ -14,5 +14,4 @@ public class Main {
         ServerCore core = ctx.getBean(ServerCore.class);
         core.start();
     }
-
 }

@@ -18,13 +18,14 @@ public class Main {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-context.xml");
         Client client = ctx.getBean(Client.class);
-        client.start();
 
         BufferedReader inputStream = new BufferedReader((new InputStreamReader(System.in)));
         String input = "";
-        printMenu(client);
 
         try {
+            client.start();
+            printMenu(client);
+
             while (!"y".equals(input)) {
                 System.out.println("Enter command line: ");
                 System.out.print(">");

@@ -29,7 +29,7 @@ public class ReceiverSenderServiceImpl implements ReceiverSenderService {
     private volatile boolean shutdown;
 
     private FileWorkerService fileWorkerService;
-    private int byteFrameSize = 1024;
+    private Integer byteFrameSize = 1024;
 
     public ReceiverSenderServiceImpl(@Autowired FileWorkerService fileWorkerService,
                                      @Value("${frame.size}") int frameSize) throws IOException {
@@ -148,7 +148,7 @@ public class ReceiverSenderServiceImpl implements ReceiverSenderService {
                 this.sendDataBuffer(buffer);
             }
             bufferedDataStream.close();
-            fileWorkerService.updateStatistics(f.getAbsolutePath());
+            fileWorkerService.incrementStatistics(f.getAbsolutePath());
             return;
         }
         this.sendResponse(FILE_NAME_ERROR.getMessage());
@@ -161,6 +161,7 @@ public class ReceiverSenderServiceImpl implements ReceiverSenderService {
 
     private void sendResponse(Object object) throws IOException {
         log.info("Send response to client.");
+        this.objectWriter.reset();
         this.objectWriter.writeObject(object);
         this.objectWriter.flush();
     }

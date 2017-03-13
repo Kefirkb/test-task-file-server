@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
@@ -27,7 +27,7 @@ public class FileWorkerServiceImpl implements FileWorkerService {
 
     private List<File> fullListOfFiles;
 
-    private HashMap<String, Integer> mapStatistics;
+    private ConcurrentHashMap<String, Integer> mapStatistics;
     private BufferedWriter writer;
     private File fileStatistics;
 
@@ -86,7 +86,7 @@ public class FileWorkerServiceImpl implements FileWorkerService {
 
     private void createStatistics() throws IOException {
 
-        mapStatistics = new HashMap<>();
+        mapStatistics = new ConcurrentHashMap<>();
         fileStatistics = new File(statisticsFilePath);
         writer = new BufferedWriter(new FileWriter(fileStatistics));
 
@@ -99,7 +99,8 @@ public class FileWorkerServiceImpl implements FileWorkerService {
     }
 
     @Override
-    synchronized public void updateStatistics(String fileKey) throws IOException {
+    public void incrementStatistics(String fileKey) {
+        log.info("increment statistics.");
         File file = this.containsFile(fileKey);
 
         if (nonNull(file)) {
@@ -108,7 +109,6 @@ public class FileWorkerServiceImpl implements FileWorkerService {
             if (nonNull(value)) {
                 value++;
                 mapStatistics.put(fileKey, value);
-                saveStatistics();
             }
         }
     }
@@ -131,13 +131,16 @@ public class FileWorkerServiceImpl implements FileWorkerService {
         return null;
     }
 
-    private void saveStatistics() throws IOException {
+    @Override
+    public void saveStatistics() throws IOException {
+        log.info("Start save statistics");
         writer = new BufferedWriter(new FileWriter(fileStatistics));
 
         for (Map.Entry<String, Integer> rec : mapStatistics.entrySet()) {
             writer.write(rec.getKey() + "=" + rec.getValue() + System.lineSeparator());
         }
         writer.close();
+        log.info("End save statistics");
     }
 
 }
