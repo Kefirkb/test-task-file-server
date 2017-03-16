@@ -17,4 +17,8 @@
     <bean id="receiverSenderServiceImpl" class="com.kefirkb.core.ReceiverSenderServiceImpl" scope="prototype">
         <constructor-arg type="com.kefirkb.core.FileWorkerService" ref="fileWorkerServiceImpl"/>
     </bean>
+
+    <bean id="serverCore" class="com.kefirkb.core.ServerCoreImpl">
+        <lookup-method name="getReceiverSenderService" bean="receiverSenderServiceImpl"/>
+    </bean>
 </beans>

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,7 @@ public class FileWorkerServiceImpl implements FileWorkerService {
 
     private List<File> fullListOfFiles;
 
-    private ConcurrentHashMap<String, Integer> mapStatistics;
+    private Map<String, Integer> mapStatistics;
     private BufferedWriter writer;
     private File fileStatistics;
 
@@ -36,9 +35,9 @@ public class FileWorkerServiceImpl implements FileWorkerService {
                                  @Value("${file.statistics}") String statisticsFilePath) throws IOException {
         this.workFolder = workFolder;
         this.statisticsFilePath = statisticsFilePath;
+        this.initialWork();
     }
 
-    @PostConstruct
     private void initialWork() throws IOException {
         this.validateWorkFolder(workFolder);
         this.fullListOfFiles = getFullListOfFiles();

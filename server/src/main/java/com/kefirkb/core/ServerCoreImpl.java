@@ -16,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class ServerCoreImpl implements ServerCore {
+public abstract class ServerCoreImpl implements ServerCore {
 
     private List<ReceiverSenderService> clientList;
     private volatile boolean shutDown;
@@ -29,13 +29,11 @@ public class ServerCoreImpl implements ServerCore {
     private int maxClients;
 
     public ServerCoreImpl(
-            @Autowired ApplicationContext applicationContext,
             @Autowired ServerSocket serverSocket,
             @Autowired FileWorkerService fileWorkerService,
             @Value("${time.frequencySaveStatistics}") int frequencySaveStatistics,
             @Qualifier(value = "threadPoolTaskExecutor") ThreadPoolTaskExecutor executor,
             @Value("${server.maxClients}") int maxClients) throws IOException {
-        this.applicationContext = applicationContext;
         this.serverSocket = serverSocket;
         this.fileWorkerService = fileWorkerService;
         this.frequencySaveStatistics = frequencySaveStatistics;
@@ -95,7 +93,7 @@ public class ServerCoreImpl implements ServerCore {
             socket.close();
             return;
         }
-        final ReceiverSenderService clientReceiver = this.applicationContext.getBean(ReceiverSenderService.class);
+        final ReceiverSenderService clientReceiver = this.getReceiverSenderService();
         clientReceiver.openReceiverSender(socket);
         this.clientList.add(clientReceiver);
         this.executor.execute(() -> {
