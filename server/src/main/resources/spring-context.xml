@@ -4,8 +4,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
     <context:component-scan base-package="com.kefirkb.core"/>
-    <context:property-placeholder location="file:./app.properties"/>
-    <!--context:property-placeholder location="classpath*:app.properties"/-->
+    <context:property-placeholder location="${env}"/>
 
     <bean id="serverSocket" class="java.net.ServerSocket">
         <constructor-arg name="port" value="${server.port}"/>

@@ -84,7 +84,6 @@ public class FileWorkerServiceImpl implements FileWorkerService {
     }
 
     private void createStatistics() throws IOException {
-
         mapStatistics = new ConcurrentHashMap<>();
         fileStatistics = new File(statisticsFilePath);
         writer = new BufferedWriter(new FileWriter(fileStatistics));
@@ -114,7 +113,6 @@ public class FileWorkerServiceImpl implements FileWorkerService {
 
     @Override
     public File containsFile(String fileName) {
-
         if (isNull(fileName) || fileName.isEmpty()) {
             String message = fileName + " is invalid file name";
             log.error(message);
